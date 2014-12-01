@@ -13,7 +13,7 @@ ARCH_ARM_HAVE_TLS_REGISTER := true
 
 TARGET_BOOTLOADER_BOARD_NAME := cross82_3821
 
-BOARD_KERNEL_CMDLINE := 
+BOARD_KERNEL_CMDLINE := console=ttyMT0,921600n1 vmalloc=496M slub_max_order=0 lcm=0-otm1283a_hd720_dsi_vdo fps=5945 bootprof.pl_t=477 bootprof.lk_t=1843 printk.disable_uart=1 boot_reason=0 
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 
