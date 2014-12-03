@@ -13,6 +13,6 @@ $(call inherit-product, device/evercoss/cross82_3821/device_cross82_3821.mk)
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := cross82_3821
 PRODUCT_NAME := cm_cross82_3821
-PRODUCT_BRAND := evercoss
-PRODUCT_MODEL := cross82_3821
-PRODUCT_MANUFACTURER := evercoss
+PRODUCT_BRAND := Evercoss
+PRODUCT_MODEL := Evercoss Elevate Y
+PRODUCT_MANUFACTURER := Evercoss
