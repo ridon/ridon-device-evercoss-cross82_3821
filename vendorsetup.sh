@@ -1,1 +1,1 @@
-add_lunch_combo ridon-evercoss-cross82_3821
+add_lunch_combo ridon_evercoss-cross82_3821
