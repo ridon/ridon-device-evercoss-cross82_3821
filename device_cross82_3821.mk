@@ -18,19 +18,19 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 PRODUCT_COPY_FILES += \
-	$(DEVICE_FOLDER)/rootdir/init.aee.customer.rc:root:init.aee.customer.rc
-	$(DEVICE_FOLDER)/rootdir/init.charging.rc:root:init.charging.rc
-	$(DEVICE_FOLDER)/rootdir/init.environ.rc:root:init.environ.rc
-	$(DEVICE_FOLDER)/rootdir/init.modem.rc:root:init.modem.rc
-	$(DEVICE_FOLDER)/rootdir/init.no_ssd.rc:root:init.no_ssd.rc
-	$(DEVICE_FOLDER)/rootdir/init.project.rc:root:init.project.rc
-	$(DEVICE_FOLDER)/rootdir/init.protect.rc:root:init.protect.rc
-	$(DEVICE_FOLDER)/rootdir/init.rc:root:init.rc
-	$(DEVICE_FOLDER)/rootdir/init.trace.rc:root:init.trace.rc
-	$(DEVICE_FOLDER)/rootdir/init.usb.rc:root:init.usb.rc
-	$(DEVICE_FOLDER)/rootdir/init.xlog.rc:root:init.xlog.rc
-	$(DEVICE_FOLDER)/rootdir/meta_init.modem.rc:root:meta_init.modem.rc
-	$(DEVICE_FOLDER)/rootdir/meta_init.project.rc:root:meta_init.project.rc
+	$(DEVICE_FOLDER)/rootdir/init.aee.customer.rc:root:init.aee.customer.rc \
+	$(DEVICE_FOLDER)/rootdir/init.charging.rc:root:init.charging.rc \
+	$(DEVICE_FOLDER)/rootdir/init.environ.rc:root:init.environ.rc \
+	$(DEVICE_FOLDER)/rootdir/init.modem.rc:root:init.modem.rc \
+	$(DEVICE_FOLDER)/rootdir/init.no_ssd.rc:root:init.no_ssd.rc \
+	$(DEVICE_FOLDER)/rootdir/init.project.rc:root:init.project.rc \
+	$(DEVICE_FOLDER)/rootdir/init.protect.rc:root:init.protect.rc \
+	$(DEVICE_FOLDER)/rootdir/init.rc:root:init.rc \
+	$(DEVICE_FOLDER)/rootdir/init.trace.rc:root:init.trace.rc \
+	$(DEVICE_FOLDER)/rootdir/init.usb.rc:root:init.usb.rc \
+	$(DEVICE_FOLDER)/rootdir/init.xlog.rc:root:init.xlog.rc \
+	$(DEVICE_FOLDER)/rootdir/meta_init.modem.rc:root:meta_init.modem.rc \
+	$(DEVICE_FOLDER)/rootdir/meta_init.project.rc:root:meta_init.project.rc \
 	$(DEVICE_FOLDER)/rootdir/meta_init.rc:root:meta_init.rc
 
 $(call inherit-product, build/target/product/full.mk)
