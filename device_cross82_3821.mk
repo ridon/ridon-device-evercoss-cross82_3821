@@ -5,7 +5,8 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
 $(call inherit-product-if-exists, vendor/evercoss/cross82_3821/cross82_3821-vendor.mk)
 
-DEVICE_PACKAGE_OVERLAYS += device/evercoss/cross82_3821/overlay
+DEVICE_FOLDER := device/evercoss/cross82_3821
+DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay
 
 LOCAL_PATH := device/evercoss/cross82_3821
 ifeq ($(TARGET_PREBUILT_KERNEL),)
