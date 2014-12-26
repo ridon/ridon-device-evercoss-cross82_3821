@@ -19,6 +19,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 PRODUCT_COPY_FILES += \
+	$(DEVICE_FOLDER)/rootdir/fstab:root/fstab \
+	$(DEVICE_FOLDER)/rootdir/ueventd.rc:root/ueventd.rc \
 	$(DEVICE_FOLDER)/rootdir/init.aee.customer.rc:root/init.aee.customer.rc \
 	$(DEVICE_FOLDER)/rootdir/init.charging.rc:root/init.charging.rc \
 	$(DEVICE_FOLDER)/rootdir/init.environ.rc:root/init.environ.rc \
@@ -34,7 +36,21 @@ PRODUCT_COPY_FILES += \
 	$(DEVICE_FOLDER)/rootdir/meta_init.project.rc:root/meta_init.project.rc \
 	$(DEVICE_FOLDER)/rootdir/meta_init.rc:root/meta_init.rc
 
-$(call inherit-product, build/target/product/full.mk)
+PRODUCT_COPY_FILES += \
+	$(DEVICE_FOLDER)/blobs/meta_tst:root/sbin/meta_tst \
+	$(DEVICE_FOLDER)/blobs/sbchk/sbchk:root/sbchk/sbchk \
+	$(DEVICE_FOLDER)/blobs/sbchk/sec_chk.sh:root/sbchk/sec_chk.sh
+
+
+# Kludge
+PRODUCT_COPY_FILES += \
+	$(DEVICE_FOLDER)/blobs/placeholder:root/data/placeholder \
+	$(DEVICE_FOLDER)/blobs/placeholder:root/sys/placeholder \
+	$(DEVICE_FOLDER)/blobs/placeholder:root/dev/placeholder \
+	$(DEVICE_FOLDER)/blobs/placeholder:root/system/placeholder \
+	$(DEVICE_FOLDER)/blobs/placeholder:root/proc/placeholder
+
+$(call inherit-product, build/target/product/full_base_telephony.mk)
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 PRODUCT_NAME := full_cross82_3821
