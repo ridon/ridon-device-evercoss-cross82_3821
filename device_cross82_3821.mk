@@ -15,6 +15,10 @@ else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
+PRODUCT_PACKAGES += \
+	tune2fs_sbin \
+	e2fsck_sbin
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
