@@ -17,3 +17,4 @@ PRODUCT_NAME := ridon_cross82_3821
 PRODUCT_BRAND := Evercoss
 PRODUCT_MODEL := Evercoss Elevate Y
 PRODUCT_MANUFACTURER := Evercoss
+
