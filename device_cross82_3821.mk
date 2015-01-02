@@ -23,10 +23,15 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 PRODUCT_COPY_FILES += \
+	$(DEVICE_FOLDER)/rootdir/enableswap.sh:root/enableswap.sh \
 	$(DEVICE_FOLDER)/rootdir/fstab:root/fstab \
+	$(DEVICE_FOLDER)/rootdir/factory_init.rc:root/factory_init.rc \
+	$(DEVICE_FOLDER)/rootdir/factory_init.project.rc:root/factory_init.project.rc \
 	$(DEVICE_FOLDER)/rootdir/ueventd.rc:root/ueventd.rc \
+	$(DEVICE_FOLDER)/rootdir/ueventd.goldfish.rc:root/ueventd.goldfish.rc \
 	$(DEVICE_FOLDER)/rootdir/init.aee.customer.rc:root/init.aee.customer.rc \
 	$(DEVICE_FOLDER)/rootdir/init.charging.rc:root/init.charging.rc \
+	$(DEVICE_FOLDER)/rootdir/init.goldfish.rc:root/init.goldfish.rc \
 	$(DEVICE_FOLDER)/rootdir/init.environ.rc:root/init.environ.rc \
 	$(DEVICE_FOLDER)/rootdir/init.modem.rc:root/init.modem.rc \
 	$(DEVICE_FOLDER)/rootdir/init.no_ssd.rc:root/init.no_ssd.rc \
