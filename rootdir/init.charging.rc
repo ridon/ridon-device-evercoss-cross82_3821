@@ -33,16 +33,16 @@ on early-init
 
 on early_property:ro.build.type=user
     write /proc/bootprof "INIT: user build setting"
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar:/system/framework/mediatek-telephony-common.jar:/system/framework/mediatek-op.jar
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/mediatek-op.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar
 
 on early_property:ro.build.type=userdebug
     write /proc/bootprof "INIT: userdebug build setting"
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar:/system/framework/mediatek-telephony-common.jar:/system/framework/mediatek-op.jar
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/mediatek-op.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar
 
 
 on early_property:ro.build.type=eng
     write /proc/bootprof "INIT: eng build setting"
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/mms-common.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar:/system/framework/mediatek-telephony-common.jar:/system/framework/mediatek-op.jar:/system/framework/emma.jar
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/core-junit.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/apache-xml.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/mediatek-op.jar:/system/framework/secondary-framework.jar:/system/framework/CustomProperties.jar:/system/framework/emma.jar
 
 on init
 
@@ -81,8 +81,6 @@ loglevel 6
     #mkdir /data 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
-    #create mountpoint for persist partition
-    mkdir /persist 0771 system system
 
     # See storage config details at http://source.android.com/tech/storage/
     # mkdir /storage 0050 root sdcard_r
@@ -207,13 +205,6 @@ on fs_property:ro.mount.fs=EXT4
 
 
 
-on fs_property:ro.persist.partition.support=yes
-    write /proc/bootprof "INIT:PERSISIT:Mount_START"
-    exec /sbin/e2fsck -pfD /emmc@persist
-    exec /sbin/tune2fs -O has_journal /emmc@persist
-    mount ext4 /emmc@persist /persist noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc
-    write /proc/bootprof "INIT:PERSISIT:Mount_END"
-
 on post-fs
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
@@ -251,8 +242,6 @@ on post-fs-data
     chown system system /data
     chmod 0777 /data
     #chmod 0771 /data
-    chown system system /persist
-    chmod 0771 /persist
 
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
@@ -337,9 +326,11 @@ on post-fs-data
 
     #Mali 3D GPU driver
     #insmod /system/lib/modules/ump.ko
-    insmod /system/lib/modules/mali.ko    
-    chmod 666 /dev/mali0    
-    chown graphics /dev/mali0
+    insmod /system/lib/modules/mali.ko
+    #chmod 666 /dev/ump
+    chmod 666 /dev/mali
+    #chown graphics /dev/ump
+    chown graphics /dev/mali
 
 
     # Permissions for System Server and daemons.
@@ -348,6 +339,7 @@ on post-fs-data
     chown root   radio  /sys/class/leds/lcd-backlight/div
 
     # Touch Panel
+    chmod 0664 /dev/touch
     chown root diag /sys/module/tpd_setting/parameters/tpd_calmat
     chown root diag /sys/module/tpd_setting/parameters/tpd_em_debounce_time
     chown root diag /sys/module/tpd_setting/parameters/tpd_mode
@@ -397,7 +389,7 @@ on post-fs-data
     chown root radio /sys/devices/platform/Accdet_Driver/driver/accdet_call_state
 
     #VideoCodec
-    #insmod /system/lib/modules/vcodec_kernel_driver.ko
+    insmod /system/lib/modules/vcodec_kernel_driver.ko
     mknod /dev/Vcodec c 160 0
     chmod 0660 /dev/Vcodec
     chown system media /dev/Vcodec
@@ -424,6 +416,8 @@ on post-fs-data
     chown system /sys/devices/platform/msensor/driver/cpsreptz
 
     mkdir	/data/data/mcube 0664 system system
+    # GPIO
+    chmod 0664 /dev/mtgpio
 
         #EM eint
     chown root diag /sys/bus/platform/drivers/eint/current_eint
@@ -469,6 +463,7 @@ on post-fs-data
     chmod 0777 /data/misc/ppp
 
     # Android SEC related device nodes
+    insmod /system/lib/modules/sec.ko
     mknod /dev/sec c 182 0
     chmod 0660 /dev/sec
     chown root system /dev/sec
@@ -479,13 +474,13 @@ on post-fs-data
     chown system media /dev/fm
 
     # device apc settings
-    #insmod /system/lib/modules/devapc.ko
+    insmod /system/lib/modules/devapc.ko
 
     # device info /proc interface
-    #insmod /system/lib/modules/devinfo.ko
-    #mknod /dev/devmap c 196 0;
-    chmod 0440 /dev/devmap
-    chown root system /dev/devmap
+    insmod /system/lib/modules/devinfo.ko
+    mknod /dev/devmap c 196 0;
+    chmod 0660 /dev/devmap
+    chown root media /dev/devmap
 
     # bluetooth
     mkdir /data/@btmtk 0770 bluetooth net_bt
@@ -503,10 +498,7 @@ on post-fs-data
     chmod 0664 /dev/hdmitx
 
     # JPEG
-    chmod 0440 /dev/mtk_jpeg
-
-    #ALMK
-    chmod 0440 /dev/mtk_almk
+    chmod 0444 /dev/mtk_jpeg
 
     # DISP
     chmod 0444 /dev/mtk_disp
@@ -543,6 +535,9 @@ on post-fs-data
     # G2D
     chmod 0660 /dev/mtkg2d
     chown system media /dev/mtkg2d
+
+    #for eng mode
+    chmod 0664 /dev/misc-sd
 
     chown system media /sys/bus/platform/drivers/mem_bw_ctrl/concurrency_scenario
 
@@ -654,11 +649,6 @@ service adbd /sbin/adbd
 on property:ro.kernel.qemu=1
     start adbd
 
-service drvbd /system/bin/drvbd
-    class main
-    user system
-    group system
-
 service debuggerd /system/bin/debuggerd
     class main
 
@@ -676,7 +666,7 @@ service servicemanager /system/bin/servicemanager
     onrestart restart surfaceflinger
     onrestart restart drm
 
-service ipod /system/bin/ipod
+service ipod /system/bin/logwrapper /system/bin/ipod
     user root
     group root
     class ipo

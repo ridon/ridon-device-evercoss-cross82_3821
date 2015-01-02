@@ -36,8 +36,8 @@ loglevel 5
     export ANDROID_ROOT /system
     export ANDROID_DATA /data
     #export EXTERNAL_STORAGE /mnt/sdcard
-    #export EXTERNAL_STORAGE /storage/sdcard0
-    #export SECONDARY_STORAGE /storage/sdcard1
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
     export ASEC_MOUNTPOINT /mnt/asec
     export LOOP_MOUNTPOINT /mnt/obb
 
@@ -59,18 +59,10 @@ loglevel 5
     mkdir /data 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
-    #create mountpoint for persist partition
-    mkdir /persist 0771 system system
-
-    #Create CIP mount point
-	mkdir /custom
 
     # Directory for putting things only root should see.
     mkdir /mnt/secure 0700 root root
 
-    # Create private mountpoint so we can MS_MOVE from staging
-    mount tmpfs tmpfs /mnt/secure mode=0700,uid=0,gid=0
-    
     # Directory for staging bindmounts
     mkdir /mnt/secure/staging 0700 root root
 
@@ -115,9 +107,6 @@ on fs_property:ro.mount.fs=EXT4
     exec /sbin/tune2fs -O has_journal /emmc@usrdata
     exec /system/bin/ext4_resize
     mount ext4 /emmc@usrdata /data noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc	
-    # mount cip partitions
-    exec /sbin/e2fsck -p /emmc@custom
-	mount ext4 /emmc@custom /custom
     write /proc/bootprof "INIT:eMMC:Mount_END"
 
 on fs_property:ro.mount.fs=UBIFS
@@ -128,14 +117,6 @@ on fs_property:ro.mount.fs=UBIFS
     mount ubifs ubi@cache /cache nosuid nodev sync
     write /proc/bootprof "INIT:NAND:Mount_END"
 # mount different fs end
-
-# mount partition by some option
-on fs_property:ro.persist.partition.support=yes
-    write /proc/bootprof "INIT:PERSISIT:Mount_START"
-    exec /sbin/e2fsck -pfD /emmc@persist
-    exec /sbin/tune2fs -O has_journal /emmc@persist
-    mount ext4 /emmc@persist /persist noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc
-    write /proc/bootprof "INIT:PERSISIT:Mount_END"
 
 on post-fs
     # once everything is setup, no need to modify /
@@ -151,8 +132,6 @@ on post-fs
 
     chown system system /data
     chmod 0771 /data
-    chown system system /persist
-    chmod 0771 /persist
 
 # create basic filesystem structure
 		mkdir /data/nvram 2770 root nvram
@@ -204,12 +183,18 @@ on post-fs
     # OpenCORE proxy config
     chmod 0666 /data/http-proxy-cfg
 
-    # OpenCORE player config
-    chmod 0666 /etc/player.cfg
+	# OpenCORE player config
+	chmod 0666 /etc/player.cfg
+
+    # load driver base driver
+    insmod /system/lib/modules/mtk_drvb_73.ko
+    mknod /dev/drvb c 176 0
+    chmod 0666 /dev/drvb
 
     # WiFi
     mkdir /data/misc/wifi 0770 system wifi
     mkdir /data/misc/wifi/sockets 0770 system wifi
+    mkdir /data/system/wpa_supplicant 0770 system wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
     chmod 0660 /sys/class/rfkill/rfkill1/state 
@@ -243,30 +228,20 @@ on post-fs
     # Sensor
     chmod 0666 /dev/sensor
 
-    #VideoCodec
-    #insmod /system/lib/modules/vcodec_kernel_driver.ko
-    mknod /dev/Vcodec c 160 0
-    chmod 0660 /dev/Vcodec
-    chown system media /dev/Vcodec
-
-    #Display
-    chmod 0440 /dev/mtk_disp
-    chown system system /dev/mtk_disp
-
-    #Camera
-    chmod 0660 /dev/camera-isp
-    chown system camera /dev/camera-isp
+    # GPIO
+    chmod 0666 /dev/mtgpio
 
     # Android SEC related device nodes
+    insmod /system/lib/modules/sec.ko
     mknod /dev/sec c 182 0
     chmod 0660 /dev/sec
     chown root system /dev/sec
     
     # device info interface
-    #insmod /system/lib/modules/devinfo.ko
+    insmod /system/lib/modules/devinfo.ko
     mknod /dev/devmap c 196 0;
-    chmod 0440 /dev/devmap
-    chown root system /dev/devmap
+    chmod 0444 /dev/devmap
+    chown root media /dev/devmap
 
    #change partition permission
     chmod 0640 /emmc@sec_ro
@@ -302,20 +277,6 @@ on post-fs
     chmod 0660 /proc/driver/otp
     chown root system /proc/driver/otp
 
-    # change key_provisioning 
-    mkdir /data/key_provisioning
-    chmod 0770 /data/key_provisioning
-    chown system system /data/key_provisioning    
-
-    #autok
-    chown root system /sys/autok/debug
-    chown root system /sys/autok/param_count
-    chown root system /sys/autok/ready
-    chown root system /sys/autok/stage1/2/DONE
-    chown root system /sys/autok/stage1/2/PARAMS
-    chown root system /sys/autok/stage1/2/VOLTAGE
-    chown root system /sys/autok/stage2/2
-    
 on post-fs-data
 
 # Encrypt phone function
@@ -344,12 +305,13 @@ on property:vold.decrypt=trigger_shutdown_framework
     class_reset main
 
 on boot
+
+# set comob chipid 6582
+	 setprop persist.mtk.wcn.combo.chipid 0x6582
 		
    chown root /remount.sh
    chmod 700 /remount.sh
    exec /remount.sh
-
-   start drvbd
 
 # basic network init
     ifup lo
@@ -374,8 +336,6 @@ service console /system/bin/sh
 
 service meta_tst /sbin/meta_tst	
 
-service kisd /system/bin/kisd
-
 service nvram_daemon /system/bin/nvram_daemon
     user nvram
     group nvram system
@@ -388,22 +348,9 @@ service featured /system/bin/featured
     socket dfo stream 660 nvram system
 # DFO (End)
 
-service drvbd /system/bin/drvbd
-    class main
-    user system
-    group system
-
 service debuggerd /system/bin/debuggerd
 
 service mobile_log_d /system/bin/mobile_log_d
-    disabled
-    oneshot
-
-on property:sys.mtk.disable.mobile_log_d=1    
-    stop mobile_log_d    
-
-on property:sys.mtk.disable.mobile_log_d=0
-    start mobile_log_d
 
 service vold /system/bin/vold
     class core

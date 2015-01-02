@@ -471,47 +471,6 @@ on property:sys.usb.config=acm_third
     start adbd
     setprop sys.usb.state $sys.usb.config
 
-#44.comport --> /dev/ttyGS3
-on property:sys.usb.config=gs3
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor $sys.usb.vid
-    write /sys/class/android_usb/android0/idProduct 0005
-    write /sys/class/android_usb/android0/f_acm/port_index 4
-    write /sys/class/android_usb/android0/functions mass_storage,adb,acm
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state $sys.usb.config
-    setprop sys.usb.acm_idx 4
-
-on property:sys.usb.config=gs0gs3
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor $sys.usb.vid
-    write /sys/class/android_usb/android0/idProduct FFFD
-    write /sys/class/android_usb/android0/f_acm/port_index 1,4
-    write /sys/class/android_usb/android0/functions adb,acm
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state $sys.usb.config
-    setprop sys.usb.acm_idx 1,4
-
-# Turn on two acm port. Turn on which ports is specified by framework (sys.usb.acm_idx)
-on property:sys.usb.config=rndis,dual_acm
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor $sys.usb.vid
-    write /sys/class/android_usb/android0/idProduct FFFE
-    write /sys/class/android_usb/android0/functions rndis,acm
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state $sys.usb.config
-
-# Turn on two acm port. Turn on which ports is specified by framework (sys.usb.acm_idx)
-on property:sys.usb.config=adb,dual_acm
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor $sys.usb.vid
-    write /sys/class/android_usb/android0/idProduct FFFD
-    write /sys/class/android_usb/android0/functions adb,acm
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state $sys.usb.config
-
 on property:sys.usb.bicr=yes
     write /sys/class/android_usb/android0/f_mass_storage/bicr 1
     write /sys/class/android_usb/android0/f_mass_storage/lun/file "/dev/block/loop0"
