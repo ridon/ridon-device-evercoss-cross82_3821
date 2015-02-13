@@ -1,16 +1,16 @@
 LOCAL_PATH := $(call my-dir)
 
-$(recovery_uncompressed_ramdisk): $(MINIGZIP) \
-	$(TARGET_RECOVERY_ROOT_TIMESTAMP)
-	@echo -e ${CL_CYN}"----- Making uncompressed recovery ramdisk mtk ------"${CL_RST}
-	$(MKBOOTFS) $(TARGET_RECOVERY_ROOT_OUT) > $@
+#$(recovery_uncompressed_ramdisk): $(MINIGZIP) \
+#	$(TARGET_RECOVERY_ROOT_TIMESTAMP)
+#	@echo -e ${CL_CYN}"----- Making uncompressed recovery ramdisk mtk ------"${CL_RST}
+#	$(MKBOOTFS) $(TARGET_RECOVERY_ROOT_OUT) > $@
 
-$(recovery_ramdisk): $(MKBOOTFS) \
-	$(recovery_uncompressed_ramdisk)
-	@echo -e ${CL_CYN}"----- Making recovery mtk ramdisk ------"${CL_RST}
-	$(MINIGZIP) < $(recovery_uncompressed_ramdisk) > $@
-	device/evercoss/cross82_3821/pack.pl RECOVERY $@
-
+#$(recovery_ramdisk): $(MKBOOTFS) \
+#	$(recovery_uncompressed_ramdisk)
+#	@echo -e ${CL_CYN}"----- Making recovery mtk ramdisk ------"${CL_RST}
+#	$(MINIGZIP) < $(recovery_uncompressed_ramdisk) > $@
+#	device/evercoss/cross82_3821/pack.pl RECOVERY $@
+#
 $(INSTALLED_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) \
 		$(recovery_ramdisk) \
 		$(recovery_kernel)

@@ -15,7 +15,7 @@ on fs_property:ro.mount.fs=EXT4
     mount ext4 /emmc@protect_f /protect_f noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc
     exec /sbin/e2fsck -pfD /emmc@protect_s
     exec /sbin/tune2fs -O has_journal /emmc@protect_s
-    mount ext4 /emmc@protect_s /protect_s noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc	
+    mount ext4 /emmc@protect_s /protect_s noatime nosuid nodev wait commit=1,nodelalloc,noauto_da_alloc
     write /proc/bootprof "INIT:PROTECT:Mount_END"
 
 on fs_property:ro.mount.fs=UBIFS

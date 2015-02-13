@@ -3,7 +3,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # The gps config appropriate for this device
 $(call inherit-product, device/common/gps/gps_us_supl.mk)
 
-$(call inherit-product-if-exists, vendor/evercoss/cross82_3821/cross82_3821-vendor.mk)
+include device/mediatek/common-65xx/common.mk
+$(call inherit-product-if-exists, vendor/mediatek/mt6582/mt6582-vendor.mk)
 
 DEVICE_FOLDER := device/evercoss/cross82_3821
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay
@@ -15,49 +16,23 @@ else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
-PRODUCT_PACKAGES += \
-	tune2fs_sbin \
-	e2fsck_sbin
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
 
 PRODUCT_COPY_FILES += \
-	$(DEVICE_FOLDER)/rootdir/enableswap.sh:root/enableswap.sh \
-	$(DEVICE_FOLDER)/rootdir/fstab:root/fstab \
+	$(DEVICE_FOLDER)/rootdir/fstab.mt6582:root/fstab.mt6582 \
 	$(DEVICE_FOLDER)/rootdir/factory_init.rc:root/factory_init.rc \
-	$(DEVICE_FOLDER)/rootdir/factory_init.project.rc:root/factory_init.project.rc \
-	$(DEVICE_FOLDER)/rootdir/ueventd.rc:root/ueventd.rc \
-	$(DEVICE_FOLDER)/rootdir/ueventd.goldfish.rc:root/ueventd.goldfish.rc \
-	$(DEVICE_FOLDER)/rootdir/init.aee.customer.rc:root/init.aee.customer.rc \
-	$(DEVICE_FOLDER)/rootdir/init.charging.rc:root/init.charging.rc \
-	$(DEVICE_FOLDER)/rootdir/init.goldfish.rc:root/init.goldfish.rc \
-	$(DEVICE_FOLDER)/rootdir/init.environ.rc:root/init.environ.rc \
+	$(DEVICE_FOLDER)/rootdir/ueventd.mt6582.rc:root/ueventd.mt6582.rc \
+	$(DEVICE_FOLDER)/rootdir/init.mt6582.rc:root/init.mt6582.rc \
+	$(DEVICE_FOLDER)/rootdir/init.mt6582.usb.rc:root/init.mt6582.usb.rc \
 	$(DEVICE_FOLDER)/rootdir/init.modem.rc:root/init.modem.rc \
-	$(DEVICE_FOLDER)/rootdir/init.no_ssd.rc:root/init.no_ssd.rc \
-	$(DEVICE_FOLDER)/rootdir/init.project.rc:root/init.project.rc \
-	$(DEVICE_FOLDER)/rootdir/init.protect.rc:root/init.protect.rc \
-	$(DEVICE_FOLDER)/rootdir/init.rc:root/init.rc \
-	$(DEVICE_FOLDER)/rootdir/init.trace.rc:root/init.trace.rc \
-	$(DEVICE_FOLDER)/rootdir/init.usb.rc:root/init.usb.rc \
-	$(DEVICE_FOLDER)/rootdir/init.xlog.rc:root/init.xlog.rc \
-	$(DEVICE_FOLDER)/rootdir/meta_init.modem.rc:root/meta_init.modem.rc \
-	$(DEVICE_FOLDER)/rootdir/meta_init.project.rc:root/meta_init.project.rc \
-	$(DEVICE_FOLDER)/rootdir/meta_init.rc:root/meta_init.rc
+	$(DEVICE_FOLDER)/rootdir/init.protect.rc:root/init.protect.rc 
 
 PRODUCT_COPY_FILES += \
 	$(DEVICE_FOLDER)/blobs/meta_tst:root/sbin/meta_tst \
 	$(DEVICE_FOLDER)/blobs/sbchk/sbchk:root/sbchk/sbchk \
 	$(DEVICE_FOLDER)/blobs/sbchk/sec_chk.sh:root/sbchk/sec_chk.sh
-
-
-# Kludge
-PRODUCT_COPY_FILES += \
-	$(DEVICE_FOLDER)/blobs/placeholder:root/data/placeholder \
-	$(DEVICE_FOLDER)/blobs/placeholder:root/sys/placeholder \
-	$(DEVICE_FOLDER)/blobs/placeholder:root/dev/placeholder \
-	$(DEVICE_FOLDER)/blobs/placeholder:root/system/placeholder \
-	$(DEVICE_FOLDER)/blobs/placeholder:root/proc/placeholder
 
 $(call inherit-product, build/target/product/full_base_telephony.mk)
 
