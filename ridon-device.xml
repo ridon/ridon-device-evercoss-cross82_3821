@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <project name="ridon/ridon-device-evercoss-cross82_3821" path="device/evercoss/cross82_3821" remote="ridon-remote" revision="ridon-5.0" />
-  <project name="ridon/ridon-device-mediatek-common-mt65xx" path="device/mediatek/common-mt65xx" remote="ridon-remote" revision="ridon-5.0" />
-  <project name="ridon/ridon-vendor-mediatek-mt6582" path="device/mediatek/mt6582" remote="ridon-remote" revision="ridon-5.0" />
+  <project name="ridon/ridon-device-mediatek-common-mt65xx.git" path="device/mediatek/common-65xx" remote="ridon-remote" revision="ridon-5.0" />
+  <project name="ridon/ridon-vendor-evercoss-cross82_3821" path="vendor/evercoss/cross82_3821" remote="ridon-remote" revision="ridon-5.0" />
 </manifest>
